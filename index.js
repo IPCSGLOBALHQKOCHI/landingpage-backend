@@ -13,10 +13,10 @@ app.use(cors());
 const GOOGLE_SHEET_WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbxitm6rWGKmJ69JIivq_sIHiTtr08q8wJWUK_E0Trk7qT78tUoCItolmTPAGGBqV8wM/exec";
 
-const EDUZILLA_API_URL = "https://erp.eduzilla.in/api/leads/add_new_lead";
+// const EDUZILLA_API_URL = "https://erp.eduzilla.in/api/leads/add_new_lead";
 
-  const instCode= "IPCS_Gbl08"
-  const urlSecurityCode= "ipcsglobal"
+//   const instCode= "IPCS_Gbl08"
+//   const urlSecurityCode= "ipcsglobal"
 
 const branchMapping = {
   CHN: "Kochi",
@@ -120,21 +120,21 @@ app.post("/api/submitform", async (req, res) => {
     console.log("Data added to Google Sheet");
 
     // Send data to Eduzilla API
-    const eduZillaResponse = await axios.post(EDUZILLA_API_URL, {
-      inst_code: instCode,
-      url_security_code: urlSecurityCode,
-      fname: name,
-      email: email || "N/A",
-      mobile: mobileNumber,
-      branch: location,
-      course: course,
-    });
+    // const eduZillaResponse = await axios.post(EDUZILLA_API_URL, {
+    //   inst_code: instCode,
+    //   url_security_code: urlSecurityCode,
+    //   fname: name,
+    //   email: email || "N/A",
+    //   mobile: mobileNumber,
+    //   branch: location,
+    //   course: course,
+    // });
 
-    if (eduZillaResponse.data !== 0) {
-      console.error("Eduzilla Error:", eduZillaResponse.data);
-      throw new Error("Failed to add lead to Eduzilla");
-    }
-    console.log("Lead added to Eduzilla");
+    // if (eduZillaResponse.data !== 0) {
+    //   console.error("Eduzilla Error:", eduZillaResponse.data);
+    //   throw new Error("Failed to add lead to Eduzilla");
+    // }
+    // console.log("Lead added to Eduzilla");
 
     // All processes succeeded
     res.status(200).json({
