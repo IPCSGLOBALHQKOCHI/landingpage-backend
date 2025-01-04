@@ -92,48 +92,51 @@ app.post("/api/submitform", async (req, res) => {
 
   // Mail options
   const mailOptions = {
-    from: "info@ipcsglobal.com", // Sender email
-    to: "ipcsglobalindia@gmail.com", // The constant recipient email
+    from: "info@ipcsglobal.com",
+    to: "ipcsglobalindia@gmail.com",
     subject: "Lead Form Submission",
     html: emailContent,
   };
 
   try {
     // Send email
-    await transporter.sendMail(mailOptions);
+    const emailResult = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", emailResult.response);
 
     // Send data to Google Sheets via Apps Script Web App
     const sheetResponse = await axios.post(GOOGLE_SHEET_WEB_APP_URL, {
       name,
       mobileNumber,
-      course:courseName,
-      location:branchName,
+      course: courseName,
+      location: branchName,
       email,
       timestamp,
     });
+
     if (sheetResponse.data.status !== "success") {
+      console.error("Google Sheets Error:", sheetResponse.data);
       throw new Error("Failed to add data to Google Sheet");
     }
+    console.log("Data added to Google Sheet");
 
     // Send data to Eduzilla API
     const eduZillaResponse = await axios.post(EDUZILLA_API_URL, {
-      inst_code:instCode,
-      url_security_code:urlSecurityCode,
+      inst_code: instCode,
+      url_security_code: urlSecurityCode,
       fname: name,
       email: email || "N/A",
       mobile: mobileNumber,
-      branch:location,
+      branch: location,
       course: course,
     });
-    console.log("ERP",mobileNumber,course,location,name,instCode,urlSecurityCode);
-
-    console.log(eduZillaResponse.data);
 
     if (eduZillaResponse.data !== 0) {
+      console.error("Eduzilla Error:", eduZillaResponse.data);
       throw new Error("Failed to add lead to Eduzilla");
-      
     }
+    console.log("Lead added to Eduzilla");
 
+    // All processes succeeded
     res.status(200).json({
       message:
         "Form submitted, email sent, data added to Google Sheet, and lead sent to Eduzilla!",
@@ -143,6 +146,7 @@ app.post("/api/submitform", async (req, res) => {
     res.status(500).json({ error: "Failed to process the request" });
   }
 });
+
 
 app.get("/", (req, res) => {
   res.send("Server is running");
