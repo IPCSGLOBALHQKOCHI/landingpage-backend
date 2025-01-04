@@ -93,7 +93,7 @@ app.post("/api/submitform", async (req, res) => {
   // Mail options
   const mailOptions = {
     from: "info@ipcsglobal.com",
-    to: "ipcsglobalindia@gmail.com",
+    to: "ipcsglobalindia@gmail.com,dmmanager.ipcs@gmail.com",
     subject: "Lead Form Submission",
     html: emailContent,
   };
